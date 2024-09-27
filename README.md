@@ -22,8 +22,8 @@ The goal is to provide a single interface to manage all your cloud storage accou
 ---
 
 ## **Available Services**
--[] Discord
--[]
+- [] Discord
+- [] Google Drive
 
 
 ---

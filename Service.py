@@ -1,5 +1,9 @@
 class Service():
 
+    def __init__ (self, max_storage, max_file_size):
+        self.max_storage = max_storage
+        self.max_file_size = max_file_size
+    
     def login(self):
         raise NotImplementedError
     

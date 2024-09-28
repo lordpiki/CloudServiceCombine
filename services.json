@@ -1,0 +1,14 @@
+{
+    "cloud_services": [
+        {
+            "name": "Google Drive",
+            "speed_rating": 8,
+            "free_space_gb": 15
+        },
+        {
+            "name": "Discord",
+            "speed_rating": 3,
+            "free_space_gb": 999999999
+        }
+    ]
+}

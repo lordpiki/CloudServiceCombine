@@ -9,21 +9,14 @@ import threading
 
 class DiscordService(Service):
     
-    def __init__ (self):
+    def __init__ (self, tasks):
         MB25 = 25 * 1024 * 1024
         super().__init__(float('inf'), MB25)
         
         load_dotenv()
-        self.bot_ready = False
-        self.task_stack = []
-        
-
-        
-    def is_ready(self):
-        return self.bot_ready
-
-    def create_task(self, task):
-        self.task_stack.append(task)
+        self.task_stack = tasks
+        self.thread = threading.Thread(target=self.create_bot)
+        self.thread.start()
         
     def create_bot(self):
         
@@ -36,38 +29,39 @@ class DiscordService(Service):
         
         @bot.event
         async def on_ready():
-            print(f'Logged in as {bot.user}')
-            self.bot_ready = True
-            
-            while True:
-                if len(self.task_stack) > 0:
-                    task = self.task_stack.pop()
-                    if task['type'] == 'upload':
-                        await self.upload(task['file_path'])
-                    elif task['type'] == 'download':
-                        await self.download(task['file_id'])
+            print(f'Logged in as {bot.user}')            
+            for task in self.task_stack:
+                if task['type'] == 'upload':
+                    await self.upload(task['file_path'], task['file_id'])
+                elif task['type'] == 'download':
+                    await self.download(task['file_id'])
                         
         bot.run(token)    
                
-    async def upload(self, file_path):
+    async def upload(self, file_path, file_id):
         try:
-            chunks = FileHandler.break_down_file(file_path, self.max_file_size)
             channel_id = os.getenv('DISCORD_CHANNEL_ID')
-            print(channel_id, flush=True)
             chat = self.client.get_channel(int(channel_id))
-            print(chat, flush=True)
+            
+            chunks = FileHandler.break_down_file(file_path, self.max_file_size)
+            chunk_count = 0
             for chunk in chunks:
-                await chat.send(file=discord.File(io.BytesIO(chunk),filename="test.png"))
+                print(f"Uploading chunk {chunk_count}")
+                await chat.send(file=discord.File(io.BytesIO(chunk),filename=f"{file_id}_{chunk_count}"))
+                
         except Exception as e:
             print(e)
             
-    async def download(self, file_id):
-        pass
+    async def download(self, file_id, chunk_count):
+        try:
+            channel_id = os.getenv('DISCORD_CHANNEL_ID')
+            chat = self.client.get_channel(int(channel_id))
+            async for message in chat.history(limit=200):
+                if message.attachments:
+                    attachment = message.attachments[0]
+                    if attachment.id == file_id:
+                        await attachment.save(attachment.filename)
+                        break
+        except Exception as e:
+            print(e)
                
-        
-if __name__ == '__main__':
-    service = DiscordService()
-    thread = threading.Thread(target=service.create_bot)
-    thread.start()
-    service.create_task({'type': 'upload', 'file_path': 'test.png'}) 
-    thread.join()

@@ -1,5 +1,8 @@
 class Service():
 
+    def login(self):
+        raise NotImplementedError
+    
     def upload(self, file_path):
         raise NotImplementedError
 
@@ -9,7 +12,6 @@ class Service():
     def get_storage_info(self):
         raise NotImplementedError
 
-    
     def get_service_name(self):
         raise NotImplementedError
     

@@ -15,7 +15,7 @@ class FileHandler:
     # Example of how to use:
     # file_handler.reasseble_file(chunks, 'file_path')
     @staticmethod
-    def reasseble_file(chunks, file_path):
+    def reasseble_file(file_path, chunks):
         with open(file_path, 'wb') as f:
             for chunk in chunks:
                 f.write(chunk)

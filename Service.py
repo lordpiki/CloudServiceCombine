@@ -4,10 +4,8 @@ class Service():
         self.max_storage = max_storage
         self.max_file_size = max_file_size
     
-    def login(self):
-        raise NotImplementedError
     
-    def upload(self, file_path):
+    def upload(self, files: list):
         raise NotImplementedError
 
     def download(self, file_id):

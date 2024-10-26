@@ -34,7 +34,7 @@ class DiscordService(Service):
                 if task['type'] == 'upload':
                     await self.upload(task['file_path'], task['file_id'])
                 elif task['type'] == 'download':
-                    await self.download(task['file_id'])
+                    await self.download(task['file_id'], 1, task['file_name'])
                         
         bot.run(token)    
                
@@ -44,24 +44,28 @@ class DiscordService(Service):
             chat = self.client.get_channel(int(channel_id))
             
             chunks = FileHandler.break_down_file(file_path, self.max_file_size)
-            chunk_count = 0
+            attachments = []
             for chunk in chunks:
-                print(f"Uploading chunk {chunk_count}")
-                await chat.send(file=discord.File(io.BytesIO(chunk),filename=f"{file_id}_{chunk_count}"))
+                attachments.append(discord.File(io.BytesIO(chunk), filename=f"{file_id}_{len(attachments)}"))
+            await chat.send(files=attachments)
                 
         except Exception as e:
             print(e)
             
-    async def download(self, file_id, chunk_count):
+    async def download(self, file_id, chunk_count, file_path):
         try:
             channel_id = os.getenv('DISCORD_CHANNEL_ID')
             chat = self.client.get_channel(int(channel_id))
-            async for message in chat.history(limit=200):
+            all_chunks = []
+            async for message in chat.history(limit=None):
+                if len(all_chunks) >= chunk_count:
+                    break
                 if message.attachments:
-                    attachment = message.attachments[0]
-                    if attachment.id == file_id:
-                        await attachment.save(attachment.filename)
-                        break
+                    for attachment in message.attachments:
+                        if attachment.filename.startswith(file_id):
+                            all_chunks.append(attachment)
+            all_chunks.sort(key=lambda x: int(x.filename.split('_')[1]))
+                                        
         except Exception as e:
             print(e)
                

@@ -9,12 +9,12 @@ import threading
 
 class DiscordService(Service):
     
-    def __init__ (self, tasks):
+    def __init__ (self, service_id: str, credentials:dict, max_storage: int, max_file_size: int, name: str):
         MB25 = 25 * 1024 * 1024
         super().__init__(float('inf'), MB25)
         
         load_dotenv()
-        self.task_stack = tasks
+        # self.task_stack = tasks
         self.thread = threading.Thread(target=self.create_bot)
         self.thread.start()
         

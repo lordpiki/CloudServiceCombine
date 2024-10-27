@@ -26,6 +26,10 @@ class FileHandler:
                     break
                 chunks.append(chunk)
             return chunks
+        
+    @staticmethod
+    def extract_name_from_path(self, file_path: str):
+        return file_path.split('/')[-1]
     
     # Example of how to use:
     # file_handler.reasseble_file(chunks, 'file_path')

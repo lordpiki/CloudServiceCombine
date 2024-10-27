@@ -156,6 +156,35 @@ def main():
     file_path = "arc.png"
     result = uploader.upload_file(file_path)
     print(f"File uploaded successfully. File ID: {result['id']}")
+    
+    # Download the file back
+    def download_file(file_id, destination_path):
+        """Download a file from Google Drive"""
+        if not uploader.token:
+            raise Exception("No valid token. Please authenticate first.")
+        
+        headers = {
+            'Authorization': f'Bearer {uploader.token["access_token"]}'
+        }
+        
+        response = requests.get(
+            f'https://www.googleapis.com/drive/v3/files/{file_id}?alt=media',
+            headers=headers,
+            stream=True
+        )
+        
+        if response.status_code == 200:
+            with open(destination_path, 'wb') as file:
+                for chunk in response.iter_content(chunk_size=8192):
+                    file.write(chunk)
+            print(f"File downloaded successfully to {destination_path}")
+        else:
+            raise Exception(f"File download failed: {response.text}")
+
+    # Example usage
+    file_id = result['id']
+    destination_path = "downloaded_arc.png"
+    download_file(file_id, destination_path)
 
 if __name__ == "__main__":
     main() 

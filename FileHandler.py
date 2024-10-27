@@ -3,14 +3,29 @@
 class FileHandler:
     
     # This function breaks down a file into chunks of a specified size and yealds them (Generator)
+    # Example of how to use:
+    # chunks = file_handler.break_down_file('file_path', chunk_size)
+    # for chunk in chunks:
+    #     # Do something with the chunk
     @staticmethod
-    def break_down_file(file_path, chunk_size):
+    def break_down_file_generator(file_path, chunk_size):
         with open(file_path, 'rb') as f:
             while True:
                 chunk = f.read(chunk_size)
                 if not chunk:
                     break
                 yield chunk
+                
+    @staticmethod
+    def break_down_file(file_path, chunk_size):
+        with open(file_path, 'rb') as f:
+            chunks = []
+            while True:
+                chunk = f.read(chunk_size)
+                if not chunk:
+                    break
+                chunks.append(chunk)
+            return chunks
     
     # Example of how to use:
     # file_handler.reasseble_file(chunks, 'file_path')

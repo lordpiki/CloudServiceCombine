@@ -28,7 +28,7 @@ class FileHandler:
             return chunks
         
     @staticmethod
-    def extract_name_from_path(self, file_path: str):
+    def extract_name_from_path(file_path: str):
         return file_path.split('/')[-1]
     
     # Example of how to use:

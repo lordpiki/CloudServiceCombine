@@ -53,14 +53,14 @@ class FileManager():
     
     
     # DB functions
-    def save_files_to_db(self, config_location: str):
+    def save_files_to_db(self):
         # save files to db
-        with open(config_location, 'w') as f:
+        with open(self.file_config_path, 'w') as f:
             json.dump(self.files, f)
     
-    def save_services_to_db(self, config_location: str):
+    def save_services_to_db(self):
         # save services to db
-        with open(config_location, 'w') as f:
+        with open(self.service_config_path, 'w') as f:
             json.dump(self.services, f)
 
     def load_files_from_db(self):
@@ -76,5 +76,9 @@ class FileManager():
                 service = services_dict[service_id]
                 # create service object for each service
                 if service['service_name'] == 'discord':
-                    self.services[service_id] = DiscordService(credentials=service['credentials'], max_storage=service['max_storage'], max_file_size=service['max_file_size'], name=service['name'])
+                    self.services[service_id] = DiscordService(credentials=service['credentials'], name=service['name'])
     
+    
+manager = FileManager('files.json', 'services.json')
+# manager.upload(['C:/Users/mikid/Downloads/Better-CrewLink-Setup-3.1.3.exe'], '4082da61-b40d-42a4-8c96-60742c67174d')
+manager.download(['51bfef09-9d36-4574-9b57-b98e3865c088'])

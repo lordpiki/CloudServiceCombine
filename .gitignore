@@ -131,7 +131,9 @@ env.bak/
 venv.bak/
 myvenv/
 
-credentials.json
+files.json
+services.json
+
 
 # Spyder project settings
 .spyderproject

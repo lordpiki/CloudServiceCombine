@@ -6,6 +6,7 @@ from discord.ext import commands
 import os
 import threading
 import uuid
+import requests
 
 class DiscordService(Service):
     
@@ -15,29 +16,24 @@ class DiscordService(Service):
         self.token = credentials['token']
         self.channel_id = credentials['channel_id']
         
-        self.thread = threading.Thread(target=self.create_bot)
-        self.thread.start()
-        
     def create_bot(self,parts):
-        
+        print('Creating bot')
         intents = discord.Intents.default()
         intents.message_content = False
         bot = commands.Bot(command_prefix='!', intents=intents)
+        self.client = bot
         
         @bot.event
         async def on_ready():
             self.parts_ids = await self.upload_parts(parts) 
+            print('Bot is ready')
             await bot.close()
                      
         bot.run(self.token)    
+        print('Bot closed')
         
     def upload(self, parts: list) -> list[str]:
-        # Starting bot in a new thread
-        tasks = {
-            'type': 'upload',
-            'parts': parts
-        }
-        thread = threading.Thread(target=self.create_bot, args=(tasks,))
+        thread = threading.Thread(target=self.create_bot, args=(parts,))
         thread.start()
         thread.join()
         return self.parts_ids
@@ -57,7 +53,18 @@ class DiscordService(Service):
                 
         except Exception as e:
             print(e)
+    
+    def download(self, parts_ids: list[str]) -> list:
+        try:
+            parts = []
+            for part_id in parts_ids:
+                response = requests.get(part_id)
+                parts.append(response.content)
+            return parts
+        except Exception as e:
+            print(e)
             
+    
     # async def download(self, file_id, chunk_count, file_path):
     #     try:
     #         channel_id = os.getenv('DISCORD_CHANNEL_ID')

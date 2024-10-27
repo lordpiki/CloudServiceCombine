@@ -4,7 +4,7 @@ import json
 
 class Service():
 
-    def __init__ (self, credentials:dict, max_storage: int, max_file_size: int, name: str):
+    def __init__ (self, name: str, max_storage: int=None, max_file_size: int=None, credentials:dict=None):
         self.max_storage = max_storage
         self.max_file_size = max_file_size
         self.name = name

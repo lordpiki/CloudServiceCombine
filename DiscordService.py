@@ -1,71 +1,77 @@
 import io
 from Service import Service
 from FileHandler import FileHandler
-from dotenv import load_dotenv  
 import discord
 from discord.ext import commands
 import os
 import threading
+import uuid
 
 class DiscordService(Service):
     
-    def __init__ (self, service_id: str, credentials:dict, max_storage: int, max_file_size: int, name: str):
+    def __init__ (self, credentials:dict, name: str):
         MB25 = 25 * 1024 * 1024
-        super().__init__(float('inf'), MB25)
+        super().__init__(max_storage=float('inf'), max_file_size=MB25, name=name)
+        self.token = credentials['token']
+        self.channel_id = credentials['channel_id']
         
-        load_dotenv()
-        # self.task_stack = tasks
         self.thread = threading.Thread(target=self.create_bot)
         self.thread.start()
         
-    def create_bot(self):
+    def create_bot(self,parts):
         
         intents = discord.Intents.default()
         intents.message_content = False
         bot = commands.Bot(command_prefix='!', intents=intents)
-
-        token = os.getenv('DISCORD_BOT_SECRET')
-        self.client = bot
         
         @bot.event
         async def on_ready():
-            print(f'Logged in as {bot.user}')            
-            for task in self.task_stack:
-                if task['type'] == 'upload':
-                    await self.upload(task['file_path'], task['file_id'])
-                elif task['type'] == 'download':
-                    await self.download(task['file_id'], 1, task['file_name'])
-                        
-        bot.run(token)    
+            self.parts_ids = await self.upload_parts(parts) 
+            await bot.close()
+                     
+        bot.run(self.token)    
+        
+    def upload(self, parts: list) -> list[str]:
+        # Starting bot in a new thread
+        tasks = {
+            'type': 'upload',
+            'parts': parts
+        }
+        thread = threading.Thread(target=self.create_bot, args=(tasks,))
+        thread.start()
+        thread.join()
+        return self.parts_ids
                
-    async def upload(self, file_path, file_id):
+    async def upload_parts(self, parts):
         try:
-            channel_id = os.getenv('DISCORD_CHANNEL_ID')
-            chat = self.client.get_channel(int(channel_id))
+            chat = self.client.get_channel(int(self.channel_id))
+            parts_ids = []
             
-            chunks = FileHandler.break_down_file(file_path, self.max_file_size)
-            attachments = []
-            for chunk in chunks:
-                attachments.append(discord.File(io.BytesIO(chunk), filename=f"{file_id}_{len(attachments)}"))
-            await chat.send(files=attachments)
+            for part in parts:
+                discord_file = discord.File(io.BytesIO(part), filename=str(uuid.uuid4()))
+                message = await chat.send(file=discord_file)
+                attachment = message.attachments[0]
+                parts_ids.append(attachment.url)
+            
+            return parts_ids
                 
         except Exception as e:
             print(e)
             
-    async def download(self, file_id, chunk_count, file_path):
-        try:
-            channel_id = os.getenv('DISCORD_CHANNEL_ID')
-            chat = self.client.get_channel(int(channel_id))
-            all_chunks = []
-            async for message in chat.history(limit=None):
-                if len(all_chunks) >= chunk_count:
-                    break
-                if message.attachments:
-                    for attachment in message.attachments:
-                        if attachment.filename.startswith(file_id):
-                            all_chunks.append(attachment)
-            all_chunks.sort(key=lambda x: int(x.filename.split('_')[1]))
+    # async def download(self, file_id, chunk_count, file_path):
+    #     try:
+    #         channel_id = os.getenv('DISCORD_CHANNEL_ID')
+    #         chat = self.client.get_channel(int(channel_id))
+    #         all_chunks = []
+    #         async for message in chat.history(limit=None):
+    #             if len(all_chunks) >= chunk_count:
+    #                 break
+    #             if message.attachments:
+    #                 for attachment in message.attachments:
+    #                     if attachment.filename.startswith(file_id):
+    #                         all_chunks.append(attachment)
+    #         all_chunks.sort(key=lambda x: int(x.filename.split('_')[1]))
                                         
-        except Exception as e:
-            print(e)
+    #     except Exception as e:
+    #         print(e)
                

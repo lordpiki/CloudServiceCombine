@@ -1,0 +1,12 @@
+{
+    "Google":
+    {
+        "client_id": "1094592796250-5l2fg4g55t865kcgefhm61450arumsn2.apps.googleusercontent.co",
+        "redirect_uri": "http://127.0.0.1:8080" 
+    },
+    "Microsoft":
+    {
+        "client_id": "TODO",
+        "redirect_uri": "TODO"
+    }
+}

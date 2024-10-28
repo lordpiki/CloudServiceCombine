@@ -3,6 +3,7 @@ from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                              QStatusBar)
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon, QFont
+import qtawesome as qta
 
 class TopNavBar(QToolBar):
     def __init__(self, parent=None):
@@ -34,10 +35,8 @@ class TopNavBar(QToolBar):
         
         # Add navigation items
         nav_items = [
-            ("📁 Files", "files"),
-            ("☁ Services", "services"),
-            ("↑ Uploads", "uploads"),
-            ("↓ Downloads", "downloads"),
+            ("Files", "files"),
+            ("Services", "services"),
             (" Help", "help"),
         ]
         
@@ -50,21 +49,22 @@ class TopNavBar(QToolBar):
             self.addWidget(btn)
             
         # Add settings button aligned to the right
-        # self.addStretch()
-        settings_btn = QPushButton("⚙ Settings")
+        settings_btn = QPushButton()
+        settings_btn.setIcon(qta.icon("fa.cog", color="white"))
         settings_btn.setStyleSheet("""
             QPushButton {
-                color: #8e9297;
-                padding: 8px 16px;
-                border: none;
-                border-radius: 4px;
+            padding: 8px;
+            border: none;
+            border-radius: 4px;
+            margin-left: auto;
             }
             QPushButton:hover {
-                background-color: #2e3338;
-                color: white;
+            background-color: #2e3338;
             }
         """)
+        # self.addWidget(QWidget(),)  # Add a spacer to push the settings button to the right
         self.addWidget(settings_btn)
+        
         
         # Set Home as initially selected
         self.nav_buttons["files"].setChecked(True)
@@ -109,10 +109,12 @@ class FileRow(QFrame):
             }
         """)
         
-        dropbox_btn = QPushButton("☁")
+        dropbox_btn = QPushButton()
+        dropbox_icon = QIcon("dpx_log.png")
+        dropbox_btn.setIcon(dropbox_icon)
         dropbox_btn.setStyleSheet("""
             QPushButton {
-                color: #007ee5;
+                color: #00ff00;
                 border: none;
                 padding: 5px;
             }
@@ -121,10 +123,11 @@ class FileRow(QFrame):
             }
         """)
         
-        gdrive_btn = QPushButton("☁")
+        gdrive_btn = QPushButton()
+        gdrive_btn.setIcon(QIcon("dpx_logo.png"))
         gdrive_btn.setStyleSheet("""
             QPushButton {
-                color: #4285f4;
+                color: #ff0000;
                 border: none;
                 padding: 5px;
             }

@@ -44,7 +44,7 @@ class DiscordService(Service):
             parts_ids = []
             
             for part in parts:
-                discord_file = discord.File(io.BytesIO(part), filename=str(uuid.uuid4()))
+                discord_file = discord.File(io.BytesIO(part[0]), filename=part[1])
                 message = await chat.send(file=discord_file)
                 attachment = message.attachments[0]
                 parts_ids.append(attachment.url)

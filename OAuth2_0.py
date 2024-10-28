@@ -10,6 +10,7 @@ import threading
 from urllib.parse import urlparse, parse_qs
 import uuid
 import json
+import time
 
 CONFIG_PATH = 'auth_config.json'
 SERVICES_PATH = 'services.json'
@@ -29,11 +30,15 @@ class OAuthCallbackHandler(BaseHTTPRequestHandler):
         threading.Thread(target=self.server.shutdown).start()
 
 class OAuth2_0:
-    def __init__(self, service: str, name: str):
-        self.service = service
-        self.name = name
-        self.load_config()
-        pass
+    def __init__(self, service_type: str, name: str=None, service_id: str = None):
+        if name:
+            self.service = service_type
+            self.name = name
+            self.load_config()
+        else:
+            self.service_id = service_id
+            self.load_service(service_id, service_type)
+        
     
     def load_config(self):
         with open(CONFIG_PATH, 'r') as f:
@@ -45,19 +50,66 @@ class OAuth2_0:
             self.auth_url = service['auth_url']
             self.token_url = service['token_url']
     
+    def load_service(self, service_id: str, service_type: str):
+        with open(SERVICES_PATH, 'r') as f:
+            services = json.load(f)
+            self.service = services[service_id]
+            self.token = self.service['credentials']
+
+        with open(CONFIG_PATH, 'r') as f:
+            config = json.load(f)
+            service = config[service_type]
+            self.client_id = service['client_id']
+
     def save_to_services(self):
         services = {}
+        service_id = str(uuid.uuid4())
         with open(SERVICES_PATH, 'r') as f:
             services = json.load(f)
         
+        # Save service_id to credentials so we can identify the service later in case of a refresh token
+        self.token['service_id'] = service_id
         with open(SERVICES_PATH, 'w') as f:
-            services[str(uuid.uuid4())] = {
+            services[service_id] = {
                 'service_name': self.service,
                 'credentials': self.token,
+                'created_at': time.time(),
                 'name': self.name
+                
             } 
             json.dump(services, f)
- 
+    
+    
+    def check_token(self):
+        if time.time() - self.service['created_at'] > self.token['expires_in']:
+            self.refresh_token()
+        
+    def refresh_access_token(self):
+        """Use the refresh token to get a new access token"""
+        refresh_token = self.token['credentials']['refresh_token']
+        if not refresh_token:
+            raise Exception("No refresh token available. Please authenticate again.")
+
+        data = {
+            'client_id': self.client_id,
+            'refresh_token': refresh_token,
+            'grant_type': 'refresh_token'
+        }
+
+        response = requests.post(self.token_url, data=data)
+        if response.status_code == 200:
+            new_tokens = response.json()
+            self.token['access_token'] = new_tokens['access_token']
+            self.token['expires_in'] = new_tokens['expires_in']
+            
+        else:
+            raise Exception(f"Token refresh failed: {response.text}")
+        
+        with open(SERVICES_PATH, 'w') as f:
+            services = json.load(f)
+            services[self.service_id]['credentials'] = self.token
+            json.dump(services, f)
+    
     def auth(self):
         # Get authorization URL and start local server
         auth_url = self.get_authorization_url()
@@ -74,7 +126,7 @@ class OAuth2_0:
         self.token = self.get_tokens(OAuthCallbackHandler.auth_code)
         self.save_to_services()
         return self.token
-
+    
     @staticmethod
     def generate_pkce_pair():
         """Generate PKCE code verifier and challenge"""
@@ -127,7 +179,7 @@ class OAuth2_0:
         response = requests.post(token_url, data=data)
         if response.status_code == 200:
             self.token = response.json()
+            print(self.token)
             return self.token
         else:
             raise Exception(f"Token exchange failed: {response.text}")
-        

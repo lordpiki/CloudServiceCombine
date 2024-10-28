@@ -7,8 +7,7 @@ from OAuth2_0 import OAuth2_0
 class DropboxService(Service):
     def __init__(self, credentials: dict, name: str):
         GB5 = 5 * 1024 * 1024 * 1024
-        super().__init__(name=name, max_storage=GB5, max_file_size=GB5)
-        self.name = name
+        super().__init__(max_storage=GB5, max_file_size=GB5, name=name)
         self.token = credentials
     
     def upload(self, parts:list):
@@ -19,7 +18,7 @@ class DropboxService(Service):
         
         parts_ids = []
         for part in parts:
-            file_name = str(uuid.uuid4())
+            file_name = part[1]
             headers = {
                 'Authorization': f"Bearer {self.token['access_token']}",
                 'Dropbox-API-Arg': json.dumps({"path": f"/{file_name}", "mode": "add", "autorename": True}),
@@ -29,7 +28,7 @@ class DropboxService(Service):
             response = requests.post(
                 'https://content.dropboxapi.com/2/files/upload',
                 headers=headers,
-                data=part
+                data=part[0]
             )
             
             if response.status_code == 200:

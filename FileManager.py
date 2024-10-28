@@ -4,13 +4,16 @@ import uuid
 
 # Specific imports
 from FileHandler import FileHandler
+from OAuth2_0 import OAuth2_0
 
 # Service imports
 from DiscordService import DiscordService
+from GoogleService import GoogleService
+from DropboxService import DropboxService
 
 
 class FileManager():
-    def __init__(self, file_config_path, service_config_path):
+    def __init__(self, file_config_path: str, service_config_path: str):
         self.files = {}
         self.services = {}
         self.file_config_path = file_config_path
@@ -21,11 +24,16 @@ class FileManager():
     def upload(self, file_paths: list[str], service_id: str):
         # Get the service object
         service = self.services[service_id]
+        
         # For each file path, upload the file to the service
         for file_path in file_paths:
             file_id = str(uuid.uuid4())
             # Break down file into parts
             parts = FileHandler.break_down_file(file_path, service.max_file_size)
+            if len(parts) == 1:
+                parts = [(parts[0], FileHandler.extract_name_from_path(file_path))]
+            else:
+                parts = [(part, str(uuid.uuid4())) for part in parts]
             # Upload the parts to the service, and get back the service provided ids for each part
             parts_ids = service.upload(parts)
             
@@ -71,14 +79,23 @@ class FileManager():
     def load_services_from_db(self):
         # load services into self.services
         with open(self.service_config_path, 'r') as f:
+            # All currently supported services
+            service_classes = {
+                'Discord': DiscordService,
+                'Google': GoogleService,
+                'Dropbox': DropboxService
+            }
+            # Load services from db
             services_dict = json.load(f)
-            for service_id in services_dict:
-                service = services_dict[service_id]
-                # create service object for each service
-                if service['service_name'] == 'discord':
-                    self.services[service_id] = DiscordService(credentials=service['credentials'], name=service['name'])
+            # For each service, create the matching service object and add it to self.services
+            for service_id, service in services_dict.items():
+                service_class = service_classes.get(service['service_name'])
+                if service_class:
+                    self.services[service_id] = service_class(credentials=service['credentials'], name=service['name'])
     
     
 manager = FileManager('files.json', 'services.json')
-# manager.upload(['C:/Users/mikid/Downloads/Better-CrewLink-Setup-3.1.3.exe'], '4082da61-b40d-42a4-8c96-60742c67174d')
-manager.download(['51bfef09-9d36-4574-9b57-b98e3865c088'])
+manager.upload(['./arc.png'], '807d005a-502e-4315-a707-2f1c8161b8c9')
+manager.upload(['./arc.png'], '4082da61-b40d-42a4-8c96-60742c67174d')
+manager.upload(['./arc.png'], '03d408f4-6d82-4824-a257-cd8258a9393d')
+# manager.download(['5afc706c-d53d-40c7-b120-e65e3cf41b69'])

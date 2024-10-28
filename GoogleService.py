@@ -7,15 +7,13 @@ from OAuth2_0 import OAuth2_0
 class GoogleService(Service):
     def __init__(self, credentials: dict, name: str):
         GB15 = 15 * 1024 * 1024 * 1024
-        super().__init__(max_storage=GB15, max_file_size=GB15)
-        self.name = name
+        super().__init__(max_storage=GB15, max_file_size=GB15, name=name)
         self.token = credentials
         
     def upload(self, parts: list):
         # Check if user is authenticated
-        if not self.token:
-            oauth = OAuth2_0("Google", self.name)
-            self.token = oauth.auth()
+        oauth = OAuth2_0(service_type='Google', name=None, service_id=self.token['service_id'], )
+        oauth.check_token()
         
         mime_type = 'application/octet-stream'
         
@@ -23,7 +21,7 @@ class GoogleService(Service):
         for part in parts:
             
             metadata = {
-                'name': str(uuid.uuid4()),
+                'name': part[1],
                 'mimeType': mime_type
             }
             
@@ -47,7 +45,7 @@ class GoogleService(Service):
                         'Content-Length': str(len(part))
                     }
             
-            response = requests.put(upload_url, data=part, headers=headers)
+            response = requests.put(upload_url, data=part[0], headers=headers)
             
             if response.status_code == 200:
                 parts_ids.append(response.json()['id'])
@@ -78,4 +76,3 @@ class GoogleService(Service):
                 raise Exception(f"Failed to download part: {response.text}")
         
         return parts
-    

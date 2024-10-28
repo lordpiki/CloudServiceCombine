@@ -1,0 +1,19 @@
+{
+    "Google":
+    {
+        "client_id": "1094592796250-5l2fg4g55t865kcgefhm61450arumsn2.apps.googleusercontent.com",
+        "scope": "https://www.googleapis.com/auth/drive.file",
+        "redirect_uri": "http://localhost:8080",
+        "auth_url": "https://accounts.google.com/o/oauth2/v2/auth?",
+        "token_url": "https://accounts.google.com/o/oauth2/token"
+
+    },
+    "Microsoft":
+    {
+        "client_id": "TODO",
+        "scope": "https://graph.microsoft.com/.default",
+        "redirect_uri": "http://localhost:8080",
+        "auth_url": "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?",
+        "token_url": "https://login.microsoftonline.com/common/oauth2/v2.0/token"
+    }
+}

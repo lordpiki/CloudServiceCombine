@@ -51,6 +51,7 @@ class GoogleService(Service):
             
             if response.status_code == 200:
                 parts_ids.append(response.json()['id'])
+                return parts_ids
             else:
                 raise Exception(f"Failed to upload part: {response.text}")
     
@@ -78,5 +79,3 @@ class GoogleService(Service):
         
         return parts
     
-service = GoogleService(credentials=None, name='Google1')
-service.upload([b'Hello', b'World'])

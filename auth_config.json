@@ -15,5 +15,13 @@
         "redirect_uri": "http://localhost:8080",
         "auth_url": "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?",
         "token_url": "https://login.microsoftonline.com/common/oauth2/v2.0/token"
+    },
+    "Dropbox":
+    {
+        "client_id": "h1ijrcwvi1dq6cj",
+        "scope": "files.content.write files.content.read",
+        "redirect_uri": "http://localhost:8080",
+        "auth_url": "https://www.dropbox.com/oauth2/authorize?",
+        "token_url": "https://api.dropbox.com/oauth2/token"
     }
 }

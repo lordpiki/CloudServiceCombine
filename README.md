@@ -16,7 +16,7 @@ The goal is to provide a single interface to manage all your cloud storage accou
 - [x] **Unlimited Storage**: Add as many services and account as you wish, or use one of the unlimited storage services, to give you as much cloud storage as you will ever need!
 - [x] **Unified Interface**: View and manage all your cloud storage in one place.
 - [ ] **Priority Sorting**: Set priorities for where files should go first when one service is full or limited.
-- [ ] **Windows FS Integration**: Use a folder on your PC to automatically upload to Cloud Service Combine, freeing up space on your PC!
+- [ ] **Windows FS Integration**: Use a folder on your PC to automatically upload to CloudSyncer, freeing up space on your PC!
 
 ---
 

@@ -18,6 +18,11 @@ class WebBridge(QObject):
     def executeFunction(self):
         # Sample function execution
         print("Function executed!")
+        
+    @pyqtSlot(str)
+    def logMessage(self, message):
+        # Log message from JavaScript
+        print(f"Message from JavaScript: {message}")
 
 class MainWindow(QMainWindow):
     def __init__(self):

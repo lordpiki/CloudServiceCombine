@@ -133,7 +133,9 @@ function loadFiles() {
 
                 const deleteButton = document.createElement('button');
                 deleteButton.onclick = function() {
-                    deleteFile(file_id);
+                    const parentFileRow = this.closest('.file-row');
+                    const fileId = parentFileRow.id;
+                    deleteFile(fileId);
                 };
                 deleteButton.className = 'action-button';
                 deleteButton.innerHTML = `
@@ -146,7 +148,9 @@ function loadFiles() {
 
                 const downloadButton = document.createElement('button');
                 downloadButton.onclick = function() {
-                    downloadFile(file_id);
+                    const parentFileRow = this.closest('.file-row');
+                    const fileId = parentFileRow.id;
+                    downloadFile(fileId);
                 };
                 downloadButton.className = 'action-button';
                 downloadButton.innerHTML = `

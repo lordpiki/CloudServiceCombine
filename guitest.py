@@ -10,19 +10,24 @@ class WebBridge(QObject):
     @pyqtSlot()
     def uploadFile(self):
         # Open file dialog for uploading files
-        file_path, _ = QFileDialog.getOpenFileName(None, "Select a File")
-        if file_path:
-            print(f"File selected: {file_path}")
+        file_paths, _ = QFileDialog.getOpenFileNames(None, "Select Files")
+        if file_paths:
+            for file_path in file_paths:
+                print(f"File selected: {file_path}")
 
-    @pyqtSlot()
-    def executeFunction(self):
-        # Sample function execution
-        print("Function executed!")
         
     @pyqtSlot(str)
     def logMessage(self, message):
         # Log message from JavaScript
         print(f"Message from JavaScript: {message}")
+        
+    @pyqtSlot(str)
+    def downloadFile(self, file_id):
+        print(f"Downloading file with ID: {file_id}")
+        
+    @pyqtSlot(str)
+    def deleteFile(self, file_id):
+        print(f"Deleting file with ID: {file_id}")
 
 class MainWindow(QMainWindow):
     def __init__(self):

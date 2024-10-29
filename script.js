@@ -6,21 +6,62 @@ function setupPythonBridge() {
         window.python = channel.objects.bridge;
     });
     loadFiles();
+    loadServices();
+}
+
+function downloadFile(file_id) {
+    window.python.downloadFile(file_id);
+}
+
+function deleteFile(file_id) {
+    window.python.deleteFile(file_id);
 }
 
 function getServiceIcon(service_name) {
     switch (service_name) {
         case "Dropbox":
             return "images/dpx_logo.png";
-        case "Google Drive":
-            return "images/google_drive_logo.png";
+        case "Google":
+            return "images/gdrive_logo.png";
         case "Discord":
             return "images/discord_logo.png";
         default:
-            return "images/dpx_logo.png";
+            return "arc.png";
     }
 }
 
+function loadServices() {
+    const services_path = "./auth_config.json";
+    fetch(services_path)
+
+        .then(response => response.json())
+        .then(data => {
+            services = data;
+            servicesList = document.getElementsByClassName('services');
+            servicesList = servicesList[0];
+
+            for (const key in data) {
+                const service = key;    
+                service_name = service;
+                service_id = service.uuid;
+                logo_path = getServiceIcon(service_name);
+            
+
+                const serviceRow = document.createElement('div');
+                serviceRow.className = 'service-button';
+                serviceRow.id = service_id;
+
+                const serviceImageDiv = document.createElement('div');
+                serviceImageDiv.className = 'service_image';
+                serviceImageDiv.innerHTML = `
+                    <img src="${logo_path}" alt="Service Logo" width="50" height="50" />
+                `;
+                serviceRow.appendChild(serviceImageDiv);
+
+                servicesList.appendChild(serviceRow);
+            }
+        });
+}
 
 function loadFiles() {
     const files_path = "./files.json";
@@ -91,6 +132,9 @@ function loadFiles() {
                 actionsDiv.appendChild(separator1);
 
                 const deleteButton = document.createElement('button');
+                deleteButton.onclick = function() {
+                    deleteFile(file_id);
+                };
                 deleteButton.className = 'action-button';
                 deleteButton.innerHTML = `
                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#D16A7B" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x">
@@ -101,6 +145,9 @@ function loadFiles() {
                 actionsDiv.appendChild(deleteButton);
 
                 const downloadButton = document.createElement('button');
+                downloadButton.onclick = function() {
+                    downloadFile(file_id);
+                };
                 downloadButton.className = 'action-button';
                 downloadButton.innerHTML = `
                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#71E052" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download">

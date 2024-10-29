@@ -35,9 +35,10 @@ body::-webkit-scrollbar{
 .header-item {
     cursor: pointer;
     align-items: right;
-    margin-left: 1vw;
+    margin: 0 1.25vw;
     background-color: transparent;
 }
+
 
 .windows-buttons{
     width: 100%;
@@ -146,31 +147,50 @@ body::-webkit-scrollbar{
 
 /* Footer section */
 .footer {
-    width: 90%;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    font-size: 48px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 20px;
-    padding: 20px;
-    background-color: #252a3a;
-    border-radius: 10px;
+    /* background-color: #252a3a; */
+    border-top: 1px solid #373A4D;
+    height: 27vh;
 }
+
 
 .add-service, .add-file {
     display: flex;
+    flex: 1;
     align-items: center;
-    gap: 10px;
-    color: #c8c8d3;
+    flex-direction: column;
+    justify-content: center;
+    gap: 40px;
+    color: #C7CFF2;
+    /* border: 1px solid red; */
+    font-weight: bold;
+}
+
+
+.services{
+    display: flex;
+    /* flex: 1; */
+    justify-content: space-around;
+    align-items: center;
+    gap: 2.5vh;
+    color: #C7CFF2;
+    /* border: 1px solid red; */
     font-weight: bold;
 }
 
 .service-button, .add-file-button {
-    background-color: #252a3a;
-    color: #8a8e99;
+    background-color: transparent;
+    color: #C7CFF2;
     border: none;
     cursor: pointer;
     font-size: 20px;
-    padding: 5px;
+    /* padding: 5px; */
     border-radius: 5px;
     transition: background-color 0.3s;
 }

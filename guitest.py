@@ -39,7 +39,7 @@ class MainWindow(QMainWindow):
         self.web_view.load(QUrl(html_file))
         
         # Window settings
-        self.resize(500, 400)
+        self.resize(1600, 900)
 
 app = QApplication(sys.argv)
 window = MainWindow()

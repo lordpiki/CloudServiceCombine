@@ -29,6 +29,12 @@ class WebBridge(QObject):
     def deleteFile(self, file_id):
         print(f"Deleting file with ID: {file_id}")
 
+    @pyqtSlot(str, list)
+    def addService(self, service_name, credentials=None):
+        if service_name == "Discord":
+            print(f"Adding Discord service with credentials: {credentials}")
+        print(f"Adding service: {service_name}")
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()

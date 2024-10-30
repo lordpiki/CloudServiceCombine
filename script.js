@@ -17,6 +17,62 @@ function deleteFile(file_id) {
     window.python.deleteFile(file_id);
 }
 
+function addService(service_name) {
+    credentials = [];
+    if (service_name == "Discord") {
+        // open popup to enter discord token and discord channel id
+        const discordCredentialsScreen = document.createElement('div');
+        discordCredentialsScreen.className = 'credentials-screen';
+        discordCredentialsScreen.style.position = 'fixed';
+        discordCredentialsScreen.style.top = '0';
+        discordCredentialsScreen.style.left = '0';
+        discordCredentialsScreen.style.width = '100%';
+        discordCredentialsScreen.style.height = '100%';
+        discordCredentialsScreen.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        discordCredentialsScreen.style.display = 'flex';
+        discordCredentialsScreen.style.flexDirection = 'column';
+        discordCredentialsScreen.style.justifyContent = 'center';
+        discordCredentialsScreen.style.alignItems = 'center';
+        discordCredentialsScreen.style.backdropFilter = 'blur(10px)';
+
+        const tokenLabel = document.createElement('label');
+        tokenLabel.textContent = 'Discord Token:';
+        discordCredentialsScreen.appendChild(tokenLabel);
+
+        const tokenInput = document.createElement('input');
+        tokenInput.type = 'text';
+        tokenInput.className = 'credentials-input';
+        discordCredentialsScreen.appendChild(tokenInput);
+
+        const channelIdLabel = document.createElement('label');
+        channelIdLabel.textContent = 'Discord Channel ID:';
+        discordCredentialsScreen.appendChild(channelIdLabel);
+
+        const channelIdInput = document.createElement('input');
+        channelIdInput.type = 'text';
+        channelIdInput.className = 'credentials-input';
+        discordCredentialsScreen.appendChild(channelIdInput);
+
+        const submitButton = document.createElement('button');
+        submitButton.textContent = 'Submit';
+        submitButton.onclick = function() {
+            credentials = [tokenInput.value, channelIdInput.value];
+            window.python.addService(service_name, credentials);
+
+            document.body.removeChild(discordCredentialsScreen);
+        };
+        discordCredentialsScreen.appendChild(submitButton);
+
+        document.body.appendChild(discordCredentialsScreen);
+
+        credentials = [tokenInput.value, channelIdInput.value];
+
+    }
+    else{
+        window.python.addService(service_name, credentials);
+    }
+}
+
 function getServiceIcon(service_name) {
     switch (service_name) {
         case "Dropbox":
@@ -41,24 +97,21 @@ function loadServices() {
             servicesList = servicesList[0];
 
             for (const key in data) {
-                const service = key;    
-                service_name = service;
-                service_id = service.uuid;
+                service_name = key;
                 logo_path = getServiceIcon(service_name);
             
-
-                const serviceRow = document.createElement('div');
-                serviceRow.className = 'service-button';
-                serviceRow.id = service_id;
-
-                const serviceImageDiv = document.createElement('div');
-                serviceImageDiv.className = 'service_image';
-                serviceImageDiv.innerHTML = `
+                const serviceButton = document.createElement('button');
+                serviceButton.className = 'service-button';
+                serviceButton.id = service_name;
+                serviceButton.onclick = function() {
+                    const serviceName = this.id;
+                    addService(serviceName);
+                };
+                serviceButton.innerHTML = `
                     <img src="${logo_path}" alt="Service Logo" width="50" height="50" />
                 `;
-                serviceRow.appendChild(serviceImageDiv);
 
-                servicesList.appendChild(serviceRow);
+                servicesList.appendChild(serviceButton);
             }
         });
 }

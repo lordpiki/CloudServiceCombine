@@ -33,7 +33,9 @@ body::-webkit-scrollbar{
 }
 
 .header-item {
+    color: #C7CFF2;
     cursor: pointer;
+    text-decoration: none;
     align-items: right;
     margin: 0 1.25vw;
     background-color: transparent;

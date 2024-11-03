@@ -76,18 +76,18 @@ function addService(service_name) {
 function getServiceIcon(service_name) {
     switch (service_name) {
         case "Dropbox":
-            return "images/dpx_logo.png";
+            return "./images/dpx_logo.png";
         case "Google":
-            return "images/gdrive_logo.png";
+            return "./images/gdrive_logo.png";
         case "Discord":
-            return "images/discord_logo.png";
+            return "./images/discord_logo.png";
         default:
             return "arc.png";
     }
 }
 
 function loadServices() {
-    const services_path = "./auth_config.json";
+    const services_path = "../auth_config.json";
     fetch(services_path)
 
         .then(response => response.json())
@@ -117,8 +117,8 @@ function loadServices() {
 }
 
 function loadFiles() {
-    const files_path = "./files.json";
-    const services_path = "./services.json";
+    const files_path = "../files.json";
+    const services_path = "../services.json";
     services = [];
     fetch(services_path)
         .then(response => response.json())

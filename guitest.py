@@ -42,7 +42,7 @@ class MainWindow(QMainWindow):
         # Initialize QWebEngineView and WebChannel
         self.web_view = QWebEngineView()
         self.setCentralWidget(self.web_view)
-        self.setWindowTitle("HTML with CSS Styling")
+        self.setWindowTitle("Cloud Service Combine")
 
         # Set up web channel and bridge
         self.channel = QWebChannel()
@@ -51,7 +51,7 @@ class MainWindow(QMainWindow):
         self.web_view.page().setWebChannel(self.channel)
 
         # Load HTML content from file
-        html_file = Path("content.html").resolve().as_uri()
+        html_file = Path("GUI/content.html").resolve().as_uri()
         self.web_view.load(QUrl(html_file))
         
         # Window settings

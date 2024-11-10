@@ -1,5 +1,6 @@
 // const { load } = require("three/examples/jsm/libs/opentype.module.js");
 
+files = [];
 
 function setupPythonBridge() {
     new QWebChannel(qt.webChannelTransport, function(channel) {
@@ -127,14 +128,17 @@ function loadFiles() {
         });
 
 
+    
     fetch(files_path)
         .then(response => response.json())
         .then(data => {
+
             filesList = document.getElementsByClassName('file-list');
             filesList = filesList[0];
             // window.python.logMessage(filesList);
 
             for (const key in data) {
+                
                 const file = data[key];
                 file_name = file.file_name;
                 service_id = file.service_id;
@@ -155,34 +159,34 @@ function loadFiles() {
                 const actionsDiv = document.createElement('div');
                 actionsDiv.className = 'actions';
 
-                const speedIndicatorDownload = document.createElement('div');
-                speedIndicatorDownload.className = 'speed-indicator';
-                speedIndicatorDownload.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-down-to-line">
-                        <path d="M12 17V3" />
-                        <path d="m6 11 6 6 6-6" />
-                        <path d="M19 21H5" />
-                    </svg>
-                    <div class="upload-speed">0mb/s</div>
-                `;
-                actionsDiv.appendChild(speedIndicatorDownload);
+                // const speedIndicatorDownload = document.createElement('div');
+                // speedIndicatorDownload.className = 'speed-indicator';
+                // speedIndicatorDownload.innerHTML = `
+                //     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-down-to-line">
+                //         <path d="M12 17V3" />
+                //         <path d="m6 11 6 6 6-6" />
+                //         <path d="M19 21H5" />
+                //     </svg>
+                //     <div class="upload-speed">0mb/s</div>
+                // `;
+                // actionsDiv.appendChild(speedIndicatorDownload);
 
-                const speedIndicatorUpload = document.createElement('div');
-                speedIndicatorUpload.className = 'speed-indicator';
-                speedIndicatorUpload.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-to-line">
-                        <path d="M5 3h14" />
-                        <path d="m18 13-6-6-6 6" />
-                        <path d="M12 7v14" />
-                    </svg>
-                    <div class="download-speed">0mb/s</div>
-                `;
-                actionsDiv.appendChild(speedIndicatorUpload);
+                // const speedIndicatorUpload = document.createElement('div');
+                // speedIndicatorUpload.className = 'speed-indicator';
+                // speedIndicatorUpload.innerHTML = `
+                //     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-to-line">
+                //         <path d="M5 3h14" />
+                //         <path d="m18 13-6-6-6 6" />
+                //         <path d="M12 7v14" />
+                //     </svg>
+                //     <div class="download-speed">0mb/s</div>
+                // `;
+                // actionsDiv.appendChild(speedIndicatorUpload);
 
-                const separator1 = document.createElement('div');
-                separator1.className = 'seperator';
-                separator1.textContent = '|';
-                actionsDiv.appendChild(separator1);
+                // const separator1 = document.createElement('div');
+                // separator1.className = 'seperator';
+                // separator1.textContent = '|';
+                // actionsDiv.appendChild(separator1);
 
                 const deleteButton = document.createElement('button');
                 deleteButton.onclick = function() {
@@ -229,7 +233,7 @@ function loadFiles() {
 
                 const fileSizeDiv = document.createElement('div');
                 fileSizeDiv.className = 'file-size';
-                fileSizeDiv.textContent = '999 MB';
+                fileSizeDiv.textContent = file.file_size;
                 actionsDiv.appendChild(fileSizeDiv);
 
                 fileRow.appendChild(actionsDiv);

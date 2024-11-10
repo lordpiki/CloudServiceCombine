@@ -1,10 +1,10 @@
 # General imports
 import json
 import uuid
+import humanize
 
 # Specific imports
 from FileHandler import FileHandler
-from OAuth2_0 import OAuth2_0
 
 # Service imports
 from DiscordService import DiscordService
@@ -25,9 +25,13 @@ class FileManager():
         # Get the service object
         service = self.services[service_id]
         
+        
         # For each file path, upload the file to the service
         for file_path in file_paths:
             file_id = str(uuid.uuid4())
+            file_size = humanize.naturalsize(FileHandler.get_file_size(file_path))
+            if "Bytes" in file_size:
+                file_size = file_size.replace("Bytes", "B")
             # Break down file into parts
             parts = FileHandler.break_down_file(file_path, service.max_file_size)
             if len(parts) == 1:
@@ -42,6 +46,7 @@ class FileManager():
                 'file_name': FileHandler.extract_name_from_path(file_path),
                 'service_id': service_id,
                 'uuid': file_id,
+                'file_size': file_size,
                 'parts_ids': parts_ids
             }
             

@@ -1,4 +1,3 @@
-
 # This class is used to handle file operations such as breaking down a file into chunks and reassembling it
 class FileHandler:
     
@@ -38,4 +37,9 @@ class FileHandler:
         with open(file_path, 'wb') as f:
             for chunk in chunks:
                 f.write(chunk)
+                
+    @staticmethod
+    def get_file_size(file_path):
+        import os
+        return os.path.getsize(file_path)
                 

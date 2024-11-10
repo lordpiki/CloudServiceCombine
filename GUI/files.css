@@ -13,6 +13,7 @@
     max-height: 53vh;
     overflow: hidden;
     overflow-y: scroll;
+    transition: all 0.3s ease;
     /* scrollbar-width: none; For Firefox */
 }
 
@@ -89,6 +90,7 @@
 .file-size {
     flex: 1;
     text-align: center;
+    width: 2vw;
     font-size: 22px;
     font-weight: bold;
     /* color: #8a8e99; */

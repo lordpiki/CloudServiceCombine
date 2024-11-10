@@ -1,0 +1,70 @@
+/* General styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+}
+
+body {
+    background-color: #1F202F;
+    color: #C7CFF2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+body::-webkit-scrollbar{
+    display: none;
+}
+
+
+
+.header {
+    display: flex;
+    /* justify-content: space-between; */
+    width: 100%;
+    height: 5vh;
+    /* padding: 10px 0; */
+    background-color: #181925;
+    align-items: center;
+    font-size: 30px;
+}
+
+.header-item {
+    color: #C7CFF2;
+    cursor: pointer;
+    text-decoration: none;
+    align-items: right;
+    margin: 0 1.25vw;
+    background-color: transparent;
+    transition: all 0.2s ease;
+}
+.header-item:hover {
+    color: rgba(199, 207, 242, 0.6);
+}
+
+
+.windows-buttons{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    /* background-color: red; */
+}
+
+.windows-button{
+    cursor: pointer;
+    align-items: middle;
+    padding: 0.75vw;
+    height: 5vh;
+    /* margin-left: 0.5vw; */
+    background-color: transparent;
+    color: #BC9DE9;
+    border: none;
+    /* border-radius: 10px; */
+    transition: all 0.3s ease; 
+}
+.windows-button:hover{
+    background-color: #343a4f;
+}

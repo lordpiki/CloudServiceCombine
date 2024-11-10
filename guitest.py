@@ -35,6 +35,18 @@ class WebBridge(QObject):
             print(f"Adding Discord service with credentials: {credentials}")
         print(f"Adding service: {service_name}")
 
+    @pyqtSlot()
+    def maximize_window(self):
+        window.showMaximized()
+    
+    @pyqtSlot()
+    def minimize_window(self):
+        window.showMinimized()
+        
+    @pyqtSlot()
+    def close_window(self):
+        window.close()
+    
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()

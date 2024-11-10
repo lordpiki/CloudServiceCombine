@@ -242,3 +242,16 @@ function loadFiles() {
 function uploadFile() {
     window.python.uploadFile();
 }
+
+
+function minimizeWindow() {
+    window.python.minimize_window();
+}
+
+function closeWindow() {
+    window.python.close_window();
+}
+
+function maximizeWindow() {
+    window.python.maximize_window();
+}

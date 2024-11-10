@@ -4,6 +4,7 @@ from PyQt6.QtCore import QUrl, QObject, pyqtSlot
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWebChannel import QWebChannel
 from pathlib import Path
+from PyQt6.QtCore import Qt
 
 # Bridge class for communication between Python and JavaScript
 class WebBridge(QObject):
@@ -45,7 +46,8 @@ class WebBridge(QObject):
         
     @pyqtSlot()
     def close_window(self):
-        window.close()
+        sys.exit(0)
+        # window.close()
     
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -55,13 +57,14 @@ class MainWindow(QMainWindow):
         self.web_view = QWebEngineView()
         self.setCentralWidget(self.web_view)
         self.setWindowTitle("Cloud Service Combine")
+        # self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
+        self.setAnimated(True)
 
         # Set up web channel and bridge
         self.channel = QWebChannel()
         self.bridge = WebBridge()
         self.channel.registerObject("bridge", self.bridge)
         self.web_view.page().setWebChannel(self.channel)
-
         # Load HTML content from file
         html_file = Path("GUI/content.html").resolve().as_uri()
         self.web_view.load(QUrl(html_file))

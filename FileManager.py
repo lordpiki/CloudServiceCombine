@@ -100,7 +100,9 @@ class FileManager():
     
     
 manager = FileManager('files.json', 'services.json')
-manager.upload(['./arc.png'], '807d005a-502e-4315-a707-2f1c8161b8c9')
-manager.upload(['./arc.png'], '4082da61-b40d-42a4-8c96-60742c67174d')
-manager.upload(['./arc.png'], '03d408f4-6d82-4824-a257-cd8258a9393d')
+# manager.upload(['./arc.png'], '4082da61-b40d-42a4-8c96-60742c67174d')
+manager.download(['bb21f81d-30a3-4aaa-b03b-debfa2f203a9'])
+# manager.upload(['./arc.png'], '4082da61-b40d-42a4-8c96-60742c67174d')
+# manager.upload(['./arc.png'], '03d408f4-6d82-4824-a257-cd8258a9393d')
 # manager.download(['5afc706c-d53d-40c7-b120-e65e3cf41b69'])
+# manager.download(["51bfef09-9d36-4574-9b57-b98e3865c088"])

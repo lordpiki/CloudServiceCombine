@@ -13,7 +13,6 @@
     max-height: 53vh;
     overflow: hidden;
     overflow-y: scroll;
-    transition: all 0.3s ease;
     /* scrollbar-width: none; For Firefox */
 }
 
